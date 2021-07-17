@@ -1,0 +1,146 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body, input, button, .custom {
+    background: hsl(185, 41%, 84%);
+    font-family: "Space Mono", serif;
+}
+
+input {
+    border: none;
+    border-radius: 0.5rem;
+    width: 100%;
+    text-align: right;
+    font-size: 24px;
+    color: hsl(183, 100%, 15%);
+    outline-color: hsl(172, 67%, 45%);
+    ;
+    font-weight: 700;
+    padding-right: 10px;
+}
+
+.title {
+    color: hsl(183, 100%, 15%);
+    letter-spacing: 10px;
+    text-align: center;
+    margin: 5vh;
+    /* min-width: 375px; */
+}
+
+/* Input Section*/
+
+main {
+    background: white;
+    border-radius: 1rem;
+    min-height: 30vh;
+    /* min-width: 375px; */
+    display: flex;
+    margin: 0 20vh 20vh;
+    padding: 25px;
+}
+
+@media only screen and (max-width: 1024px) {
+    main {
+        flex-wrap: wrap;
+        margin: 0;
+    }
+}
+
+main input {
+    background: hsl(189, 41%, 97%);
+}
+
+.user-input {
+    color: hsl(186, 14%, 43%);
+    width: 100%;
+    margin: 25px;
+}
+
+.tips {
+    width: 100%;
+    margin: 30px 0;
+}
+
+.tip-buttons {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    /* box-sizing: border-box; */
+}
+
+.tip {
+    border: none;
+    border-radius: 0.5rem;
+    background: hsl(183, 100%, 15%);
+    color: white;
+    text-align: center;
+    flex: 1;
+    flex-basis: 50%;
+    padding: 0 10px;
+    max-width: 150px;
+    height: 3rem;
+    margin: 10px 0;
+    /* justify-content: space-between; */
+}
+
+.tip:hover, .reset button:hover {
+    background: hsl(173, 61%, 77%);
+    color: hsl(183, 100%, 15%);
+}
+
+.tip:focus {
+    background: hsl(172, 67%, 45%);
+    ;
+    color: hsl(183, 100%, 15%);
+}
+
+#custom {
+    background: hsl(189, 41%, 97%);
+    color: hsl(183, 100%, 15%);
+    border: none;
+    text-align: right;
+}
+
+#custom::placeholder {
+    color: hsl(186, 14%, 43%);
+    text-align: center;
+}
+
+/* Total Section */
+
+.totals {
+    background: hsl(183, 100%, 15%);
+    color: white;
+    border-radius: 1rem;
+    width: 100%;
+    margin: 25px;
+    padding: 10px;
+    ;
+}
+
+.totals h3 {
+    color: hsl(184, 14%, 56%);
+}
+
+.reset button {
+    background: hsl(172, 67%, 45%);
+    color: hsl(183, 100%, 15%);
+    border: none;
+    border-radius: 0.5rem;
+    width: 100%;
+    padding: 10px 0 10px;
+}
+
+/* Footer Section */
+
+.attribution {
+    font-size: 11px;
+    text-align: center;
+}
+
+.attribution a {
+    color: hsl(228, 45%, 44%);
