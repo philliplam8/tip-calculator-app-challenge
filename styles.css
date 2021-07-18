@@ -2,27 +2,35 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: "Space Mono", serif;
 }
 
 body, input, button, .custom {
     background: hsl(185, 41%, 84%);
-    font-family: "Space Mono", serif;
 }
 
 input {
     border: none;
     border-radius: 0.5rem;
     width: 100%;
+    padding-right: 10px;
     text-align: right;
     font-size: 24px;
+    font-weight: 700;
     color: hsl(183, 100%, 15%);
     outline-color: hsl(172, 67%, 45%);
-    ;
-    font-weight: 700;
-    padding-right: 10px;
+}
+
+h2 {
+    font-size: 1rem;
+}
+
+h3 {
+    font-size: 0.85rem;
 }
 
 .title {
+    font-size: 0.75rem;
     color: hsl(183, 100%, 15%);
     letter-spacing: 10px;
     text-align: center;
@@ -59,6 +67,12 @@ main input {
     margin: 25px;
 }
 
+.bill img, .people img{
+    position: relative;
+    bottom: 27px;
+    left: 10px;
+}
+
 .tips {
     width: 100%;
     margin: 30px 0;
@@ -72,6 +86,10 @@ main input {
     /* box-sizing: border-box; */
 }
 
+.tip-buttons h2 {
+    font-size: 1.5rem;
+}
+
 .tip {
     border: none;
     border-radius: 0.5rem;
@@ -80,11 +98,11 @@ main input {
     text-align: center;
     flex: 1;
     flex-basis: 50%;
-    padding: 0 10px;
-    max-width: 150px;
+    max-width: 120px;
     height: 3rem;
     margin: 10px 0;
-    /* justify-content: space-between; */
+    padding: 0 10px;
+    justify-content: space-between;
 }
 
 .tip:hover, .reset button:hover {
@@ -118,17 +136,34 @@ main input {
     border-radius: 1rem;
     width: 100%;
     margin: 25px;
-    padding: 10px;
-    ;
+    padding: 40px 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .totals h3 {
     color: hsl(184, 14%, 56%);
 }
 
+.split {
+    display: flex;
+    justify-content: space-between;
+    
+}
+
+.split-amount {
+    color: hsl(172, 67%, 45%);
+    font-size: 1rem;
+    position: relative;
+    bottom: 7px;
+    text-align: right;
+}
+
 .reset button {
     background: hsl(172, 67%, 45%);
     color: hsl(183, 100%, 15%);
+    font-size: 0.75rem;
     border: none;
     border-radius: 0.5rem;
     width: 100%;
