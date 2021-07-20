@@ -11,6 +11,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
+  <script src="./app.js" async></script>
   <title>Frontend Mentor | Tip calculator app</title>
 
 </head>
@@ -26,7 +27,7 @@
     <div class="user-input">
       <div class="bill">
         <h2>Bill</h2>
-        <input type="text" placeholder="0">
+        <input type="text" pattern="\d*" placeholder="0" id="bill-input" onblur="addDecimals()">
         <img src="./images/icon-dollar.svg" alt="icon-dollar">
       </div>
 
@@ -54,7 +55,7 @@
 
       <div class="people">
         <h2>Number of People</h2>
-        <input type="text" placeholder="0">
+        <input type="text" pattern="\d*" placeholder="0" id="people-input" >
         <img src="./images/icon-person.svg" alt="icon-person">
       </div>
     </div>
@@ -67,7 +68,7 @@
             <h3>/ person</h3>
           </div>
           <div class="split-amount">
-            <h1>$4.27</h1>
+            <h1 id="tip-per-person">$0.00</h1>
           </div>
         </div>
 
@@ -77,12 +78,12 @@
             <h3>/ person</h3>
           </div>
           <div class="split-amount">
-            <h1>$32.79</h1>
+            <h1 id="total-per-person">$0.00</h1>
           </div>
         </div>
       </div>
       <div class="reset">
-        <button>
+        <button type="button" disabled id="reset-button">
           <h1>RESET</h1>
         </button>
       </div>

@@ -21,6 +21,26 @@ input {
     outline-color: hsl(172, 67%, 45%);
 }
 
+#people-input:invalid {
+    outline-color: hsl(13, 31%, 53%);
+}
+
+/* #people-input::before {
+
+} */
+
+/* Chrome, Safari, Edge, Opera */
+/* input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+} */
+
+/* Firefox */
+/* input[type=number] {
+  -moz-appearance: textfield;
+} */
+
 h2 {
     font-size: 1rem;
 }
@@ -51,6 +71,13 @@ main {
 }
 
 @media only screen and (max-width: 1024px) {
+    main {
+        margin: 5%;
+    }
+}
+
+
+@media only screen and (max-width: 767px) {
     main {
         flex-wrap: wrap;
         margin: 0;
@@ -149,7 +176,7 @@ main input {
 .split {
     display: flex;
     justify-content: space-between;
-    
+    margin: 0 0 2rem;
 }
 
 .split-amount {
@@ -170,11 +197,16 @@ main input {
     padding: 10px 0 10px;
 }
 
+.reset button:disabled{
+    background: hsl(183, 80%, 24%);
+}
+
 /* Footer Section */
 
 .attribution {
     font-size: 11px;
     text-align: center;
+    margin: 5px;
 }
 
 .attribution a {
