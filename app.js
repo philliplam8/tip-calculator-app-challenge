@@ -62,16 +62,14 @@ function detectReset() {
 }
 
 // VALIDATION --------------------------------------------------------
-function numPeopleZero() {
-    peopleInput.setAttribute("invalid", true);
-}
-
 function addPeopleError() {
     peopleError.innerText = peopleErrorMessage;
+    peopleInput.classList.add("invalid");
 }
 
 function removePeopleError() {
     peopleError.innerText = "";
+    peopleInput.classList.remove("invalid");
 }
 
 // UPDATE TOTALS  ----------------------------------------------------
@@ -86,21 +84,27 @@ function updateTotalPerPerson() {
     if (0) {//typeof(billInputValue) !== "number" || typeof(numberPeople) !== "number") {
         alert("invalid");
     }
-    if (numberPeople <= 0) {
+    if (numberPeople === "0") {
         console.log("test");
         // don't calculate total
-        numPeopleZero();
         addPeopleError();
-    // } if (numberPeople == "") {
-    //     return;
+        // } if (numberPeople == "") {
+        //     return;
     } else {
-        // Check denominator first
+        // TODO Check denominator first
+
+        // In case error message is still showing
         removePeopleError();
-        console.log("yes");
-        let totalAmountValue = billInputValue / numberPeople;
-        console.log("yes2");
-        totalAmount.innerText = "$" + roundTotal(totalAmountValue);
-        console.log("yes3");
+
+        // Calculate Total Amount per Person
+        if (numberPeople == "" || numberPeople == "0") {
+            return;
+        } else {
+            let totalAmountValue = billInputValue / numberPeople;
+            console.log("yes2");
+            totalAmount.innerText = "$" + roundTotal(totalAmountValue);
+            console.log("yes3");
+        }
     }
 }
 

@@ -21,8 +21,10 @@ input {
     outline-color: hsl(172, 67%, 45%);
 }
 
-#people-input:invalid {
-    outline-color: hsl(13, 31%, 53%);
+.invalid {
+    outline: none;
+    border-radius: 0.5rem;
+    border: 2px solid hsl(13, 31%, 53%);
 }
 
 /* #people-input::before {
