@@ -4,12 +4,7 @@ const peopleInput = document.getElementById("people-input");
 const peopleError = document.getElementById("error-people");
 const totalAmount = document.getElementById("total-per-person");
 const totalTip = document.getElementById("tip-per-person");
-const tipFive = document.getElementsByClassName("tip")[0];
-const tipFifteen = document.getElementsByClassName("tip")[1];
-const tipTwenty = document.getElementsByClassName("tip")[2];
-const tipTwentyFive = document.getElementsByClassName("tip")[3];
-const tipFifty = document.getElementsByClassName("tip")[4];
-const tipCustom = document.getElementsByClassName("tip")[5];
+const tipSection = document.getElementsByClassName("tips")[0];
 const resetButton = document.getElementById("reset-button");
 const peopleErrorMessage = "Can't be zero.";
 
@@ -62,7 +57,7 @@ function detectReset() {
 }
 
 // VALIDATION --------------------------------------------------------
-function addPeopleError() {
+function enablePeopleError() {
     peopleError.innerText = peopleErrorMessage;
     peopleInput.classList.add("invalid");
 }
@@ -74,47 +69,86 @@ function removePeopleError() {
 
 // UPDATE TOTALS  ----------------------------------------------------
 
-function updateTotalPerPerson() {
+function getBill() {
+    return billInput.value;
+}
+
+function getPeople() {
     const numberPeople = getNumPeople();
-    const billInputValue = billInput.value;
-    var messages = [];
 
     // Validation base case: if number of ppl is empty or 0
-    // TODO: negative case, non-number
+    // TODO: validation for negative case, non-number
     if (0) {//typeof(billInputValue) !== "number" || typeof(numberPeople) !== "number") {
         alert("invalid");
     }
     if (numberPeople === "0") {
-        console.log("test");
         // don't calculate total
-        addPeopleError();
-        // } if (numberPeople == "") {
-        //     return;
-    } else {
-        // TODO Check denominator first
+        enablePeopleError();
 
+    } else {
         // In case error message is still showing
         removePeopleError();
+        return numberPeople;
+    }
+}
 
-        // Calculate Total Amount per Person
-        if (numberPeople == "" || numberPeople == "0") {
-            return;
-        } else {
-            let totalAmountValue = billInputValue / numberPeople;
-            console.log("yes2");
-            totalAmount.innerText = "$" + roundTotal(totalAmountValue);
-            console.log("yes3");
-        }
+function getTipEventHandler(event) {
+    console.log(event.target, event.target.tagName);
+
+    if (event.target.tagName == "INPUT") {
+        // Do something
+    }
+    else if (event.target.tagName == "H2") {
+        var tipElement = event.target.innerText;
+        var tipString = tipElement.substring(0, tipElement.length - 1);
+        var tip = parseFloat(tipString) / 100;
+        console.log(tipElement, tipString, tip);
+        return tip;
+    }
+}
+
+function updateTotalPerPerson(bill, people, tip) {
+    console.log(bill, people, tip);
+    // Calculate Total Amount per Person
+    if (people == "" || people == "0") {
+        return;
+    } if (tip) {
+        console.log("tip");
+        let totalAmountValue = bill * (1 + tip) / people;
+        totalAmount.innerText = "$" + roundTotal(totalAmountValue);
+    }
+    else {
+        let totalAmountValue = bill / people;
+        totalAmount.innerText = "$" + roundTotal(totalAmountValue);
     }
 }
 
 function main() {
+    const bill = getBill();
+    const people = getPeople();
+    const tip = getTipEventHandler(event);
+
+    if (bill && people) {
+        // Check for tip
+
+        // Then calculate total
+        updateTotalPerPerson(bill, people, tip);
+    }
+    // Detect if Reset button should be enabled at the end
     detectReset();
-    updateTotalPerPerson();
+
 }
 
 // Problem: 
 // right now its not  adding the additional .00 from addDecimals()
+// if tip is entered first, it is not calculated
 billInput.addEventListener("input", main);
 peopleInput.addEventListener("input", main);
 resetButton.addEventListener("click", runReset);
+
+tipSection.onclick = function (event) {  
+    const bill = getBill();
+    const people = getPeople();
+    const tip = getTipEventHandler(event);
+    updateTotalPerPerson(bill, people, tip);
+}
