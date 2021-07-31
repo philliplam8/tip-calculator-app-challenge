@@ -115,15 +115,13 @@ main input {
     /* box-sizing: border-box; */
 }
 
-.tip-buttons h2 {
-    font-size: 1.5rem;
-}
-
 .tip {
     border: none;
     border-radius: 0.5rem;
     background: hsl(183, 100%, 15%);
     color: white;
+    font-size: 1.5rem;
+    font-weight: 700;
     text-align: center;
     flex: 1;
     flex-basis: 50%;
@@ -139,7 +137,7 @@ main input {
     color: hsl(183, 100%, 15%);
 }
 
-.tip:focus {
+.tip:focus, .tip-clicked {
     background: hsl(172, 67%, 45%);
     ;
     color: hsl(183, 100%, 15%);
