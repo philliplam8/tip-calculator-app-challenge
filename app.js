@@ -1,3 +1,11 @@
+// CONSTANTS
+const PEOPLE_ERROR_MESSAGE = "Can't be zero.";
+const ZERO_DOLLARS = "$0.00";
+
+// VARIABLES
+var userTipDecimal = 0;
+var tipElementClicked;
+
 // TARGETS
 const billInput = document.getElementById("bill-input");
 const peopleInput = document.getElementById("people-input");
@@ -6,21 +14,22 @@ const totalAmount = document.getElementById("total-per-person");
 const totalTip = document.getElementById("tip-per-person");
 const tipSectionElement = document.getElementsByClassName("tips")[0];
 const resetButton = document.getElementById("reset-button");
-const peopleErrorMessage = "Can't be zero.";
 
-var userTipDecimal = 0;
-var tipElementClicked;
+// CLASSES --------------------------------------------------------------------
 
+
+/**
+ * Tips represents the overall Tips section and handles identifying the current 
+ * tip selected by the user and whether the tips section has been modified by
+ * the user. 
+ */
 class Tips {
-
-    /* Items to keep track
-    
-    [x] isPristine?
-    [x] SetPristine
-    [x] RemovePristine
-
-    [x] Which element is currently clicked
-    */
+    /**
+     * 
+     * @param {object} element Returns the Tips Section DOM element 
+     * @param {boolean} [pristine=true] Optional boolean value determines if the
+     * Tips section has never been modified and defaults to true.
+     */
     constructor(element) {
         this.element = element;
         this.pristine = true;
@@ -47,14 +56,17 @@ class Tips {
     }
 }
 
+/**
+ * Tip represents the individual tip that is currently selected by the user
+ * and handles updating the styling on clicked and non-clicked tip elements 
+ */
 class Tip {
-
-    /* Items to keep track 
-       Click Style
-       Apply style to  element currently clicked
-       Remove style to element currently clicked
-    */
-
+    /**
+     * 
+     * @param {object} element Returns the Tip DOM elemennt clicked by the user.
+     * @param {number} tipValue Float value of the tip clicked as a percent. For 
+     * example 5% would have the value of 5.
+     */
     constructor(element, tipValue) {
         this.element = element;
         this.tipValue = tipValue;
@@ -87,10 +99,12 @@ class Tip {
     }
 }
 
+// ----------------------------------------------------------------------------
+
 let tipSection = new Tips(tipSectionElement);
 let newTip = new Tip(false, 0);
 
-// CALCULATE TOTALS ----------------------------------------------
+// CALCULATE TOTALS -----------------------------------------------------------
 function roundTotal(total) {
     return Math.round(total * 100) / 100;
 }
@@ -99,21 +113,24 @@ function getNumPeople() {
     return peopleInput.value;
 }
 
-// UPDATE INPUT ------------------------------------------------------
+// UPDATE INPUT ---------------------------------------------------------------
 
-function addDecimals() {                                        // This function is called using onblur within the HTML
+// This function is called using onblur within the HTML
+function addDecimals() {
     const existingAmount = billInput.value;
 
-
-    var regex = "\\.";                                          // Regex function Search will return position of match or -1 if no match 
+    // Regex function Search will return position of match or -1 if no match 
+    var regex = "\\.";
     var regexPosition = existingAmount.search(regex);
-    if (regexPosition == -1 && existingAmount !== "") {         // if no decimal, add decimal
+
+    // if no decimal, add decimal
+    if (regexPosition == -1 && existingAmount !== "") {
         billInput.value = existingAmount + ".00";
         totalAmount.innerHTML = existingAmount + ".00";
     }
 }
 
-// RESET BUTTON ----------------------------------------------------
+// RESET BUTTON ---------------------------------------------------------------
 function enableReset() {
     resetButton.removeAttribute("disabled");
 }
@@ -126,12 +143,14 @@ function runReset() {
     //TODO add clear for custom tips
 
     // Clear Inputs
-    billInput.value = "";
-    peopleInput.value = "";
+    const numberOfInputs = document.getElementsByTagName("input").length;
+    for (let i = 0; i < numberOfInputs; i++) {
+        document.getElementsByTagName("input")[i].value = ""
+    }
 
     // Clear Total Amounts
-    totalAmount.innerText = "$0.00";
-    totalTip.innerText = "$0.00"
+    totalAmount.innerText = ZERO_DOLLARS;
+    totalTip.innerText = ZERO_DOLLARS;
 
     // Clear Tips, but first check if tips is dirty
     if (!tipSection.pristine) {
@@ -144,8 +163,12 @@ function runReset() {
         newTip.removeTipValue()
         tipSection.addTipsPristine();
     }
-    disableReset();
+
+    // Clear validation errors
     removePeopleError();
+
+    // Reset finished, update reset button UI
+    disableReset();
 }
 
 function detectReset() {
@@ -155,9 +178,9 @@ function detectReset() {
     }
 }
 
-// VALIDATION --------------------------------------------------------
+// VALIDATION -----------------------------------------------------------------
 function enablePeopleError() {
-    peopleError.innerText = peopleErrorMessage;
+    peopleError.innerText = PEOPLE_ERROR_MESSAGE;
     peopleInput.classList.add("invalid");
 }
 
@@ -166,7 +189,7 @@ function removePeopleError() {
     peopleInput.classList.remove("invalid");
 }
 
-// UPDATE TOTALS  ----------------------------------------------------
+// UPDATE TOTALS  -------------------------------------------------------------
 
 function getBill() {
     console.log("getBill Ok");
@@ -192,9 +215,13 @@ function getPeople() {
     }
 }
 
-// TIPS SECTION ----------------------------------------------------
+// TIPS SECTION ---------------------------------------------------------------
 
-// TODO handle case where no tip is clicked
+
+// TODO 
+// handle case where no tip is clicked
+// BUG: is trying to parse when clicking on H2 or DIV backgroundn
+
 function getTipEventHandler(event) {
     console.log(
         "event.target: ", event.target, "\n",
@@ -214,11 +241,17 @@ function getTipEventHandler(event) {
         // Clear style on previously clicked Tip Button
         oldTip.removeTipsClickedStyle();
     }
-    newTip.addTipsClickedStyle();
+
 
     // Parse data from input
     if (newTip.element.tagName == "INPUT") {
         console.log("Custom clicked");
+        newTip.addTipsClickedStyle();
+
+
+        if (newTip.element.value == "0" || newTip.element.value == "") {
+            newTip.tipValue = 0;
+        }
 
         // If input field is non-empty, read current value before starting event listener
         if (newTip.element.value) {
@@ -226,8 +259,17 @@ function getTipEventHandler(event) {
         }
         // Start event listener for input field
         newTip.element.addEventListener("input", function () {
-            let tipString = newTip.element.value;
-            newTip.tipValue = parseFloat(tipString);
+
+            if (newTip.element.value == "0" || newTip.element.value == "") {
+                newTip.tipValue = 0;
+            }
+
+            else {
+                let tipString = newTip.element.value;
+                newTip.tipValue = parseFloat(tipString);
+            }
+
+
             console.log("Input is " + newTip.tipValue);
             main();
         })
@@ -235,6 +277,7 @@ function getTipEventHandler(event) {
 
     if (newTip.element.tagName == "BUTTON") {
         console.log("Tip Button clicked");
+        newTip.addTipsClickedStyle();
         let tipString = newTip.element.innerText;
         tipString = tipString.substring(0, tipString.length - 1);
         newTip.tipValue = parseFloat(tipString);
@@ -242,15 +285,15 @@ function getTipEventHandler(event) {
     }
 }
 
-function updateTotalPerPerson(bill, people, tip) {
+function updateTotalPerPerson(bill, people) {
     /* TODO
     Back space bill input
     backspace custom input
     backspace people input
     need ot update UI
-    */ 
+    */
 
-    console.log(bill, people, tip);
+    console.log(bill, people);
     let totalPerPersonValue;
     let tipPerPersonValue;
 
@@ -260,18 +303,17 @@ function updateTotalPerPerson(bill, people, tip) {
         return;
     }
 
-    if (tip) {
-        const tipDecimal = tip / 100;
+    if (newTip.tipValue == "") {
+        newTip.tipValue = 0;
+    }
+
+    if (newTip.tipValue >= 0) {
+        const tipDecimal = newTip.tipValue / 100;
         totalPerPersonValue = bill * (1 + tipDecimal) / people;
         tipPerPersonValue = bill * tipDecimal / people;
 
         // Update UI
-        totalAmount.innerText = "$" + roundTotal(totalPerPersonValue);
         totalTip.innerText = "$" + roundTotal(tipPerPersonValue);
-    }
-
-    else {
-        totalPerPersonValue = bill / people;
         totalAmount.innerText = "$" + roundTotal(totalPerPersonValue);
     }
 }
@@ -285,12 +327,14 @@ function main() {
     }
 
     if (bill && people) {
-        updateTotalPerPerson(bill, people, newTip.tipValue);
+        updateTotalPerPerson(bill, people);
     }
     // Detect if Reset button should be enabled at the end
     detectReset();
 
 }
+
+// EVENT LISTENERS ------------------------------------------------------------
 
 // Problem: 
 // right now its not  adding the additional .00 from addDecimals()
