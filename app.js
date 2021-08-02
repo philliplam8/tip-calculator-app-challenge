@@ -4,12 +4,91 @@ const peopleInput = document.getElementById("people-input");
 const peopleError = document.getElementById("error-people");
 const totalAmount = document.getElementById("total-per-person");
 const totalTip = document.getElementById("tip-per-person");
-const tipSection = document.getElementsByClassName("tips")[0];
+const tipSectionElement = document.getElementsByClassName("tips")[0];
 const resetButton = document.getElementById("reset-button");
 const peopleErrorMessage = "Can't be zero.";
 
-var userTip = 0;
+var userTipDecimal = 0;
 var tipElementClicked;
+
+class Tips {
+
+    /* Items to keep track
+    
+    [x] isPristine?
+    [x] SetPristine
+    [x] RemovePristine
+
+    [x] Which element is currently clicked
+    */
+    constructor(element) {
+        this.element = element;
+        this.pristine = true;
+    }
+
+    addTipsPristine() {
+        this.pristine = true;
+    }
+
+    removeTipsPristine() {
+        this.pristine = false;
+    }
+
+    // Return the current tip element clicked
+    elementClicked() {
+        if (this.pristine) {
+            console.log("No tip element has been clicked.");
+            return null;
+        }
+
+        else {
+            return document.querySelector(".tip-clicked");
+        }
+    }
+}
+
+class Tip {
+
+    /* Items to keep track 
+       Click Style
+       Apply style to  element currently clicked
+       Remove style to element currently clicked
+    */
+
+    constructor(element, tipValue) {
+        this.element = element;
+        this.tipValue = tipValue;
+    }
+
+    removeTipValue() {
+        this.element = false;
+        this.tipValue = 0;
+    }
+
+    // Add "clicked styling" to the current tip element clicked
+    addTipsClickedStyle() {
+        if (tipSection.pristine) {
+            console.log("No tip element has been clicked.");
+        }
+
+        else {
+            this.element.classList.add("tip-clicked");
+        }
+    }
+
+    // Remove "clicked styling" to the current tip element clicked
+    removeTipsClickedStyle() {
+        if (tipSection.pristine) {
+            console.log("No tip element has been clicked.");
+        }
+        else {
+            this.element.classList.remove("tip-clicked");
+        }
+    }
+}
+
+let tipSection = new Tips(tipSectionElement);
+let newTip = new Tip(false, 0);
 
 // CALCULATE TOTALS ----------------------------------------------
 function roundTotal(total) {
@@ -34,27 +113,6 @@ function addDecimals() {                                        // This function
     }
 }
 
-// TIPS SECTION ----------------------------------------------------
-function isTipsPristine() {
-    return tipSection.hasAttribute("tips-pristine");
-}
-
-function addTipsPristine() {
-    tipSection.setAttribute("tips-pristine", true);
-}
-
-function removeTipsPristine() {
-    tipSection.removeAttribute("tips-pristine");
-}
-
-function addTipsClickedStyle(element) {
-    element.classList.add("tip-clicked");
-}
-
-function removeTipsClickedStyle(element) {
-    element.classList.remove("tip-clicked");
-}
-
 // RESET BUTTON ----------------------------------------------------
 function enableReset() {
     resetButton.removeAttribute("disabled");
@@ -70,23 +128,29 @@ function runReset() {
     // Clear Inputs
     billInput.value = "";
     peopleInput.value = "";
-    
+
     // Clear Total Amounts
     totalAmount.innerText = "$0.00";
     totalTip.innerText = "$0.00"
 
     // Clear Tips, but first check if tips is dirty
-    if (!isTipsPristine()) {
-        removeTipsClickedStyle(tipElementClicked);
-        addTipsPristine();
-    }
+    if (!tipSection.pristine) {
 
+        // Check if custom tip
+        if (newTip.element.tagName == "INPUT") {
+            newTip.element.value = "";
+        }
+        newTip.removeTipsClickedStyle();
+        newTip.removeTipValue()
+        tipSection.addTipsPristine();
+    }
     disableReset();
     removePeopleError();
 }
 
 function detectReset() {
-    if (billInput.value || peopleInput.value || !isTipsPristine()) {
+    if (billInput.value || peopleInput.value || !tipSection.pristine) {
+        console.log("Enabling reset...");
         enableReset();
     }
 }
@@ -128,6 +192,8 @@ function getPeople() {
     }
 }
 
+// TIPS SECTION ----------------------------------------------------
+
 // TODO handle case where no tip is clicked
 function getTipEventHandler(event) {
     console.log(
@@ -135,34 +201,55 @@ function getTipEventHandler(event) {
         "event.currentTarget: ", event.currentTarget, "\n",
         "event.target.tagName: ", event.target.tagName);
 
-    var newTipElement;
+    const oldTip = newTip;
+    newTip = new Tip(event.target);
+    console.log(newTip.element);
 
-    if (event.target.tagName == "INPUT") {
-        // TODO something
+    // Apply styling
+    if (tipSection.pristine) {
+        // Tips section has never been edited, but will now be edited
+        tipSection.removeTipsPristine();
+        //detectReset();
+    } else {
+        // Clear style on previously clicked Tip Button
+        oldTip.removeTipsClickedStyle();
     }
-    if (event.target.tagName == "BUTTON") {
-        newTipElement = event.target;
-        // console.log(isTipsPristine(event));
-        if (isTipsPristine()) {
-            // Tips section has never been edited, but will now be edited
-            removeTipsPristine();
-            detectReset();
-        } else {
-            // Clear style on previously clicked Tip Button
-            removeTipsClickedStyle(tipElementClicked);
+    newTip.addTipsClickedStyle();
+
+    // Parse data from input
+    if (newTip.element.tagName == "INPUT") {
+        console.log("Custom clicked");
+
+        // If input field is non-empty, read current value before starting event listener
+        if (newTip.element.value) {
+            newTip.tipValue = parseFloat(newTip.element.value);
         }
-        addTipsClickedStyle(newTipElement);
-        tipElementClicked = newTipElement;
+        // Start event listener for input field
+        newTip.element.addEventListener("input", function () {
+            let tipString = newTip.element.value;
+            newTip.tipValue = parseFloat(tipString);
+            console.log("Input is " + newTip.tipValue);
+            main();
+        })
     }
 
-    // // Parse new tip clicked
-    var tipString = tipElementClicked.innerText.substring(0, tipElementClicked.innerText.length - 1);
-    console.log(tipString);
-    userTipDecimal = parseFloat(tipString) / 100;
-    return userTipDecimal;
+    if (newTip.element.tagName == "BUTTON") {
+        console.log("Tip Button clicked");
+        let tipString = newTip.element.innerText;
+        tipString = tipString.substring(0, tipString.length - 1);
+        newTip.tipValue = parseFloat(tipString);
+        console.log("Button is " + newTip.tipValue);
+    }
 }
 
 function updateTotalPerPerson(bill, people, tip) {
+    /* TODO
+    Back space bill input
+    backspace custom input
+    backspace people input
+    need ot update UI
+    */ 
+
     console.log(bill, people, tip);
     let totalPerPersonValue;
     let tipPerPersonValue;
@@ -174,9 +261,9 @@ function updateTotalPerPerson(bill, people, tip) {
     }
 
     if (tip) {
-        console.log("tip");
-        totalPerPersonValue = bill * (1 + tip) / people;
-        tipPerPersonValue = bill * tip / people;
+        const tipDecimal = tip / 100;
+        totalPerPersonValue = bill * (1 + tipDecimal) / people;
+        tipPerPersonValue = bill * tipDecimal / people;
 
         // Update UI
         totalAmount.innerText = "$" + roundTotal(totalPerPersonValue);
@@ -192,18 +279,13 @@ function updateTotalPerPerson(bill, people, tip) {
 function main() {
     const bill = getBill();
     const people = getPeople();
-    let tip = 0;
 
-    if (tipElementClicked) {
-        // TODO??? there is no event being passed
-        tip = getTipEventHandler(event);
+    if (!newTip.element) {
+        newTip.tipValue = 0;
     }
 
     if (bill && people) {
-        // Check for tip
-
-        // Then calculate total
-        updateTotalPerPerson(bill, people, tip);
+        updateTotalPerPerson(bill, people, newTip.tipValue);
     }
     // Detect if Reset button should be enabled at the end
     detectReset();
@@ -216,11 +298,7 @@ function main() {
 billInput.addEventListener("input", main);
 peopleInput.addEventListener("input", main);
 resetButton.addEventListener("click", runReset);
-
-tipSection.onclick = function (event) {
-    // TODO -- this is duplicated for the sake of making it work, will need to refactor  
-    const bill = getBill();
-    const people = getPeople();
-    const tip = getTipEventHandler(event);
-    updateTotalPerPerson(bill, people, tip);
+tipSection.element.onclick = function (event) {
+    getTipEventHandler(event);
+    main();
 }
