@@ -21,6 +21,14 @@ input {
     outline-color: hsl(172, 67%, 45%);
 }
 
+button, input {
+    cursor: pointer;
+}
+
+button:disabled {
+    cursor: not-allowed;
+}
+
 .invalid {
     outline: none;
     border-radius: 0.5rem;
