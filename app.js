@@ -12,6 +12,7 @@ var tipElementClicked;
 // TARGETS
 const billInput = document.getElementById("bill-input");
 const peopleInput = document.getElementById("people-input");
+const customTipInput  = document.getElementById("custom");
 const peopleError = document.getElementById("error-people");
 const totalAmount = document.getElementById("total-per-person");
 const totalTip = document.getElementById("tip-per-person");
@@ -390,4 +391,6 @@ resetButton.addEventListener("click", runReset);
 tipSection.element.onclick = function (event) {
     getTipEventHandler(event);
     main();
+    addZeroes();
 }
+customTipInput.addEventListener("blur", addZeroes);
