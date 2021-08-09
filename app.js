@@ -1,5 +1,8 @@
 // CONSTANTS
 const PEOPLE_ERROR_MESSAGE = "Can't be zero.";
+const NEGATIVE_ERROR_MESSAGE = "Can't be negative."
+const INVALID_ERROR_MESSAGE = "Invalid entry. Must be a number."
+const REQUIRED_MESSAGE = "This field is required."
 const ZERO_DOLLARS = "$0.00";
 
 // VARIABLES
@@ -99,8 +102,7 @@ class Tip {
     }
 }
 
-// ----------------------------------------------------------------------------
-
+// Initialize Tips and Tip class instance
 let tipSection = new Tips(tipSectionElement);
 let newTip = new Tip(false, 0);
 
@@ -115,19 +117,51 @@ function getNumPeople() {
 
 // UPDATE INPUT ---------------------------------------------------------------
 
-// This function is called using onblur within the HTML
-function addDecimals() {
-    const existingAmount = billInput.value;
+function decimalsRegex(numberString) {
+    const stringLength = numberString.length;
+    var newNumberString;
 
     // Regex function Search will return position of match or -1 if no match 
     var regex = "\\.";
-    var regexPosition = existingAmount.search(regex);
+    var regexPosition = numberString.search(regex);
 
-    // if no decimal, add decimal
-    if (regexPosition == -1 && existingAmount !== "") {
-        billInput.value = existingAmount + ".00";
-        totalAmount.innerHTML = existingAmount + ".00";
+    // if no decimal & non-empty, add decimal
+    if (regexPosition == -1 && numberString !== "") {
+        newNumberString = numberString + ".00";
     }
+
+    // if decimal exists, but no digits
+    else if (regexPosition == stringLength - 1) {
+        newNumberString = numberString + "00";
+    }
+
+    // if decimal exists, but only 1 digit
+    else if (regexPosition == stringLength - 2) {
+        newNumberString = numberString + "0";
+    }
+
+    // decimal exists and has 2 or more digits
+    // TODO should we trim if there are more  digits?
+    else {
+        newNumberString = numberString;
+    }
+
+    return newNumberString;
+}
+
+// need to update 3 things
+// 1. Bill Input field
+// 2. Read only Tip Amount / Person value
+// 3. read only Total / Person value
+
+function addZeroes() {
+    const existingBillInput = billInput.value;
+    const existingTipAmount = totalTip.innerHTML;
+    const existingTotalAmount = totalAmount.innerHTML;
+
+    billInput.value = decimalsRegex(existingBillInput);
+    totalTip.innerHTML = decimalsRegex(existingTipAmount);
+    totalAmount.innerHTML = decimalsRegex(existingTotalAmount);
 }
 
 // RESET BUTTON ---------------------------------------------------------------
@@ -319,11 +353,21 @@ function updateTotalPerPerson(bill, people) {
 }
 
 function main() {
-    const bill = getBill();
+    let bill = getBill();
     const people = getPeople();
 
     if (!newTip.element) {
         newTip.tipValue = 0;
+    }
+
+    if (bill == "0" || bill == "") {
+        bill = 0;
+        updateTotalPerPerson(bill, people);
+    }
+
+    if (people == "0") {
+        // TODO this field is required error message
+        enablePeopleError();
     }
 
     if (bill && people) {
@@ -335,13 +379,14 @@ function main() {
 }
 
 // EVENT LISTENERS ------------------------------------------------------------
-
-// Problem: 
-// right now its not  adding the additional .00 from addDecimals()
-// if tip is entered first, it is not calculated
+billInput.addEventListener("blur", addZeroes);
 billInput.addEventListener("input", main);
+
 peopleInput.addEventListener("input", main);
+peopleInput.addEventListener("blur", addZeroes);
+
 resetButton.addEventListener("click", runReset);
+
 tipSection.element.onclick = function (event) {
     getTipEventHandler(event);
     main();

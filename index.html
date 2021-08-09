@@ -27,11 +27,11 @@
     <div class="user-input">
       <div class="bill">
         <h2>Bill</h2>
-        <input type="text" pattern="[0-9]*" inputmode="numeric" placeholder="0" id="bill-input" onblur="addDecimals()">
+        <input type="text" pattern="[0-9]*" inputmode="numeric" placeholder="0" id="bill-input">
         <img src="./images/icon-dollar.svg" alt="icon-dollar">
       </div>
 
-      <div class="tips">
+      <div class="tips" tips-pristine>
         <h2>Select Tip %</h2>
         <div class="tip-buttons">
           <button class="tip">5%</button>
@@ -39,7 +39,7 @@
           <button class="tip">15%</button>
           <button class="tip">25%</button>
           <button class="tip">50%</button>
-          <input type="text" pattern="[0-9]*" inputmode="numeric" placeholder="Custom" class="tip" id="custom">
+          <input type="text" placeholder="Custom" class="tip" id="custom">
         </div>
       </div>
 
