@@ -78,6 +78,15 @@ main {
     display: flex;
     margin: 0 20vh 20vh;
     padding: 25px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1);
+}
+
+@media only screen and (min-width: 1025px) {
+    main {
+        width: 896.625px;
+        margin: auto;
+    }
+    
 }
 
 @media only screen and (max-width: 1024px) {
@@ -147,7 +156,6 @@ main input {
 
 .tip:focus, .tip-clicked {
     background: hsl(172, 67%, 45%);
-    ;
     color: hsl(183, 100%, 15%);
 }
 
