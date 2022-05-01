@@ -2,11 +2,11 @@
 const { test, expect } = require('@playwright/test');
 
 test.beforeEach(async ({ page }) => {
-    await page.goto('/');
+    await page.goto('https://philliplam8.github.io/tip-calculator-app-challenge/');
 });
 
 test.describe('Bill Input Field:', () => {
-    test('Input value has no decimals', async ({ page }) => {
+    test.only('Input value has no decimals', async ({ page }) => {
 
         const td = {
             inputBill: '100',

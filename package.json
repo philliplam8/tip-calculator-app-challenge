@@ -4,7 +4,8 @@
   "type": "module",
   "scripts": {
     "unit-tests": " node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage",
-    "test": "cd ./tests/ui-tests && npx playwright test"
+    "pretest": "npm run unit-tests",
+    "test": "cd ./tests/ui-tests && npm run test"
   },
   "devDependencies": {
     "@playwright/test": "^1.21.1",
@@ -12,6 +13,7 @@
   },
   "jest": {
     "testEnvironment": "jest-environment-node",
-    "transform": {}
+    "transform": {},
+    "modulePathIgnorePatterns": ["./tests/ui-tests"]
   }
 }
