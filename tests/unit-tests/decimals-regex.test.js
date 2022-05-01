@@ -1,4 +1,3 @@
-import { jest } from '@jest/globals'
 import { decimalsRegex } from "../../utils/helpers.util";
 
 test('Input has no decimals, 1 => 1.00', () => {
