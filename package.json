@@ -1,0 +1,16 @@
+{
+  "main": "app.js",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "test": " node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.21.1",
+    "jest": "^28.0.3"
+  },
+  "jest": {
+    "testEnvironment": "jest-environment-node",
+    "transform": {}
+  }
+}
