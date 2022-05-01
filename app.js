@@ -1,3 +1,5 @@
+import { roundTotal, decimalsRegex } from './utils/helpers.util.js';
+
 // CONSTANTS
 const PEOPLE_ERROR_MESSAGE = "Can't be zero.";
 const NEGATIVE_ERROR_MESSAGE = "Can't be negative."
@@ -12,7 +14,7 @@ var tipElementClicked;
 // TARGETS
 const billInput = document.getElementById("bill-input");
 const peopleInput = document.getElementById("people-input");
-const customTipInput  = document.getElementById("custom");
+const customTipInput = document.getElementById("custom");
 const peopleError = document.getElementById("error-people");
 const totalAmount = document.getElementById("total-per-person");
 const totalTip = document.getElementById("tip-per-person");
@@ -103,52 +105,13 @@ class Tip {
     }
 }
 
-// Initialize Tips and Tip class instance
-let tipSection = new Tips(tipSectionElement);
-let newTip = new Tip(false, 0);
-
-// CALCULATE TOTALS -----------------------------------------------------------
-function roundTotal(total) {
-    return Math.round(total * 100) / 100;
-}
-
 function getNumPeople() {
     return peopleInput.value;
 }
 
-// UPDATE INPUT ---------------------------------------------------------------
-
-function decimalsRegex(numberString) {
-    const stringLength = numberString.length;
-    var newNumberString;
-
-    // Regex function Search will return position of match or -1 if no match 
-    var regex = "\\.";
-    var regexPosition = numberString.search(regex);
-
-    // if no decimal & non-empty, add decimal
-    if (regexPosition == -1 && numberString !== "") {
-        newNumberString = numberString + ".00";
-    }
-
-    // if decimal exists, but no digits
-    else if (regexPosition == stringLength - 1) {
-        newNumberString = numberString + "00";
-    }
-
-    // if decimal exists, but only 1 digit
-    else if (regexPosition == stringLength - 2) {
-        newNumberString = numberString + "0";
-    }
-
-    // decimal exists and has 2 or more digits
-    // TODO should we trim if there are more  digits?
-    else {
-        newNumberString = numberString;
-    }
-
-    return newNumberString;
-}
+// Initialize Tips and Tip class instance
+let tipSection = new Tips(tipSectionElement);
+let newTip = new Tip(false, 0);
 
 // need to update 3 things
 // 1. Bill Input field
