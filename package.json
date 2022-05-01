@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "test": " node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage"
+    "unit-tests": " node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage",
+    "test": "cd test/ui-tests && npx playwright test"
   },
   "devDependencies": {
     "@playwright/test": "^1.21.1",
